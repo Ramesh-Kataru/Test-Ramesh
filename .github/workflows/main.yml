@@ -1,0 +1,20 @@
+name: Branch Creation Notification
+
+on:
+  create:
+    branches:
+      - 'release/*'  # This will trigger on any branch prefixed with 'release/'
+
+jobs:
+  send_slack_message:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: slackapi/slack-bolt-action@v1
+        with:
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel: ${{ secrets.SLACK_CHANNEL }}
+          text: >-
+            Dear team,
+            {{ github.event.payload.ref }} branch is now created. The main branch points to "{{ github.ref }}.
+            Please make sure your changes are merged into the correct branch. Thanks!
